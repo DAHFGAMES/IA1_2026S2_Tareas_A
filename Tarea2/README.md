@@ -1,13 +1,30 @@
-# Tarea 2 — Inventario RPG con Prolog + API REST + Web
+# Tarea 2
 
-Inteligencia Artificial 1 — Sección A — Segundo Semestre 2026
-Universidad de San Carlos de Guatemala, Facultad de Ingeniería, Escuela de Ciencias y Sistemas
+## Índice
 
----
+- [1. Qué hace el proyecto](#1-qué-hace-el-proyecto)
+- [2. Paso a paso](#2-paso-a-paso)
+- [3. Detalle técnico por fase](#3-detalle-técnico-por-fase)
+  - [Fase 1: `app/inventario.pl`](#fase-1-appinventariopl)
+  - [Fase 2: `app/servidor.py`](#fase-2-appservidorpy)
+  - [Fase 3: `app/web/`](#fase-3-appweb)
+- [4. Cómo levantarlo y bajarlo](#4-cómo-levantarlo-y-bajarlo)
+  - [4.1 Instalación](#41-instalación-una-sola-vez)
+  - [4.2 Levantar](#42-levantar)
+  - [4.3 Bajar](#43-bajar)
+  - [4.4 Cambiar el puerto](#44-cambiar-el-puerto)
+  - [4.5 Probar solo el motor Prolog](#45-probar-solo-el-motor-prolog-sin-python)
+- [5. Probar el endpoint con Bruno](#5-probar-el-endpoint-con-bruno)
+  - [5.1 Desde la aplicación de escritorio](#51-desde-la-aplicación-de-escritorio)
+  - [5.2 Desde la terminal (Bruno CLI)](#52-desde-la-terminal-bruno-cli)
+  - [5.3 Peticiones incluidas](#53-peticiones-incluidas)
+- [6. Peticiones equivalentes con curl](#6-peticiones-equivalentes-con-curl)
+- [7. Capturas de ejecución](#7-capturas-de-ejecución)
+
 
 ## 1. Qué hace el proyecto
 
-Un aventurero de un videojuego RPG tiene dos bolsas de ítems. El sistema las une en un
+El programa simula a un aventurero de un videojuego RPG que tiene dos bolsas de ítems. El sistema las une en un
 **Inventario General** y responde, para el ítem que el usuario escriba en la página web:
 
 | Dato devuelto | Predicado de Prolog que lo produce |
@@ -24,43 +41,7 @@ mediante un predicado recursivo.
 
 ---
 
-## 2. Estructura de archivos
-
-```
-hw2/
-├── app/
-│   ├── inventario.pl        <-- FASE 1: hechos, regla recursiva y regla principal
-│   ├── servidor.py          <-- FASE 2: API REST con Flask + PySwip + CORS
-│   ├── requirements.txt     <-- dependencias de Python
-│   └── web/                 <-- FASE 3: frontend
-│       ├── index.html       <-- formulario y huecos vacíos del DOM
-│       ├── script.js        <-- fetch asíncrono y renderizado dinámico
-│       └── estilos.css      <-- solo apariencia
-├── bruno/                   <-- colección de Bruno para probar el endpoint
-│   ├── bruno.json           <-- archivo que define la colección
-│   ├── environments/Local.bru
-│   └── 01..06-*.bru         <-- las 6 peticiones de prueba
-├── capturas/                <-- evidencias de ejecución
-├── statement/enunciado.md   <-- enunciado original
-└── README.md                <-- este archivo
-```
-
----
-
-## 3. Arquitectura y flujo de datos
-
-```
-┌──────────────────┐   1. GET ?item=pocion   ┌──────────────────┐   3. query()   ┌──────────────────┐
-│   NAVEGADOR      │ ──────────────────────► │   BACKEND        │ ─────────────► │   PROLOG         │
-│   index.html     │                         │   servidor.py    │                │   inventario.pl  │
-│   script.js      │ ◄────────────────────── │   Flask + CORS   │ ◄───────────── │   SWI-Prolog     │
-└──────────────────┘   6. JSON renderizado   └──────────────────┘  4. variables  └──────────────────┘
-                                                    │                unificadas          │
-                                                    │ 5. dict → JSON                     │ 4b. writeln
-                                                    ▼                                    ▼
-                                                                CONSOLA DEL SERVIDOR
-                                                             (impresión recursiva de ítems)
-```
+## 2. Paso a paso
 
 Paso a paso:
 
@@ -87,9 +68,9 @@ Paso a paso:
 
 ---
 
-## 4. Detalle técnico por fase
+## 3. Detalle técnico por fase
 
-### Fase 1 — `app/inventario.pl`
+### Fase 1: `app/inventario.pl`
 
 **Hechos** (dos listas, la principal con un duplicado a propósito):
 
@@ -124,7 +105,7 @@ cambia el valor de `Encontrado`.
 
 El archivo compila sin *Syntax Errors* y sin advertencias de *Singleton Variables*.
 
-### Fase 2 — `app/servidor.py`
+### Fase 2: `app/servidor.py`
 
 * Framework: **Flask**. Puente lógico: **PySwip**. CORS: **flask-cors** (`CORS(app)`
   habilita todas las rutas, por eso el navegador no rechaza el `fetch`).
@@ -159,7 +140,7 @@ El archivo compila sin *Syntax Errors* y sin advertencias de *Singleton Variable
 | Falta el parámetro `item` | `400` | `{"ok": false, "error": "..."}` |
 | Prolog no devuelve solución | `500` | `{"ok": false, "error": "..."}` |
 
-### Fase 3 — `app/web/`
+### Fase 3: `app/web/`
 
 * `index.html` es sólo el esqueleto: el formulario y los `<span>` / `<ul>` vacíos que
   después se rellenan.
@@ -172,11 +153,11 @@ El archivo compila sin *Syntax Errors* y sin advertencias de *Singleton Variable
 
 ---
 
-## 5. Cómo levantarlo y bajarlo
+## 4. Cómo levantarlo y bajarlo
 
 **Requisitos previos:** SWI-Prolog instalado en el sistema (`swipl --version`) y Python 3.
 
-### 5.1 Instalación (una sola vez)
+### 4.1 Instalación (una sola vez)
 
 ```bash
 cd hw2
@@ -186,7 +167,7 @@ source venv/bin/activate                  # lo activa (el prompt cambia a (venv)
 pip install -r app/requirements.txt       # instala pyswip, Flask y Flask-Cors
 ```
 
-### 5.2 Levantar
+### 4.2 Levantar
 
 ```bash
 cd hw2
@@ -205,7 +186,7 @@ Debe aparecer en la terminal:
 **Deja esa terminal abierta**: ahí es donde Prolog imprime el recorrido recursivo, y es
 la captura que pide la rúbrica. Luego abre `http://localhost:5000` en el navegador.
 
-### 5.3 Bajar
+### 4.3 Bajar
 
 ```
 Ctrl + C          # en la terminal donde quedó corriendo el servidor
@@ -219,7 +200,7 @@ pkill -f "app/servidor.py"                # lo mata por nombre
 lsof -i :5000                             # verifica que el puerto quedó libre
 ```
 
-### 5.4 Cambiar el puerto
+### 4.4 Cambiar el puerto
 
 Si el 5000 está ocupado (en macOS lo usa AirPlay):
 
@@ -233,7 +214,7 @@ Y actualiza la constante en `app/web/script.js`:
 const URL_API = "http://localhost:8080/api/inventario";
 ```
 
-### 5.5 Probar solo el motor Prolog, sin Python
+### 4.5 Probar solo el motor Prolog, sin Python
 
 ```bash
 swipl -g "analizar_inventario(pocion,T,E,I,U,O), writeln(T-E-I-U-O)" -t halt app/inventario.pl
@@ -241,13 +222,13 @@ swipl -g "analizar_inventario(pocion,T,E,I,U,O), writeln(T-E-I-U-O)" -t halt app
 
 ---
 
-## 6. Probar el endpoint con Bruno
+## 5. Probar el endpoint con Bruno
 
 La carpeta `bruno/` es una colección de [Bruno](https://www.usebruno.com/) lista para
 usar. A diferencia de Postman, la colección son archivos de texto (`.bru`) que viven
 dentro del repositorio, así que se versionan junto al código.
 
-### 6.1 Desde la aplicación de escritorio
+### 5.1 Desde la aplicación de escritorio
 
 1. Abrir Bruno → **Open Collection** → seleccionar la carpeta `hw2/bruno`.
 2. Arriba a la derecha, elegir el entorno **Local** (define `baseUrl` y `itemDePrueba`).
@@ -255,7 +236,7 @@ dentro del repositorio, así que se versionan junto al código.
 
 Cada petición trae una pestaña **Docs** que explica qué demuestra y qué se debe ver.
 
-### 6.2 Desde la terminal (Bruno CLI)
+### 5.2 Desde la terminal (Bruno CLI)
 
 ```bash
 cd hw2/bruno
@@ -263,7 +244,7 @@ npx @usebruno/cli run --env Local        # corre las 6 peticiones seguidas
 npx @usebruno/cli run 01-item-existente.bru --env Local   # solo una
 ```
 
-### 6.3 Peticiones incluidas
+### 5.3 Peticiones incluidas
 
 | # | Petición | Qué demuestra | Esperado |
 | :---: | :--- | :--- | :--- |
@@ -279,7 +260,7 @@ que la colección se valida sola: si algo se rompe, el CLI lo marca en rojo.
 
 ---
 
-## 7. Peticiones equivalentes con curl
+## 6. Peticiones equivalentes con curl
 
 ```bash
 # Ítem que sí existe
@@ -320,9 +301,7 @@ Salida real de la consola del servidor durante una consulta:
 
 ---
 
-## 8. Capturas de ejecución
-
-> Colocar las imágenes dentro de la carpeta `capturas/` con estos nombres.
+## 7. Capturas de ejecución
 
 | # | Captura | Archivo |
 | :---: | :--- | :--- |
@@ -338,12 +317,4 @@ Salida real de la consola del servidor durante una consulta:
 
 ---
 
-## 9. Convención de comentarios
-
-Todo el código está comentado con la misma convención en los cuatro lenguajes:
-
-* **Comentario de línea:** empieza con `<--` después del símbolo de comentario propio
-  del lenguaje (`%` en Prolog, `#` en Python, `//` en JavaScript, `/* */` en CSS,
-  `<!-- -->` en HTML).
-* **Comentario de bloque:** lleva la marca `*-*-*-*-*-*-*-*-*` en su primera y última
-  línea.
+[Regresar al índice](../README.md)
