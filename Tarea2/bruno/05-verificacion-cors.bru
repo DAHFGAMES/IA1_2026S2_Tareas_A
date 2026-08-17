@@ -1,0 +1,59 @@
+meta {
+  name: 05 - Verificacion de CORS
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/api/inventario?item=espada
+  body: none
+  auth: none
+}
+
+params:query {
+  item: espada
+}
+
+headers {
+  Origin: http://127.0.0.1:8080
+}
+
+assert {
+  res.status: eq 200
+}
+
+tests {
+  test("la respuesta trae la cabecera Access-Control-Allow-Origin", function () {
+    // <-- res.headers guarda las cabeceras que devolvio el servidor, en minusculas.
+    const permitido = res.headers["access-control-allow-origin"];
+    expect(permitido).to.equal("http://127.0.0.1:8080");
+  });
+}
+
+docs {
+  # CORS habilitado
+
+  <-- Se manda a proposito una cabecera `Origin` distinta a la del servidor,
+  <-- simulando que la peticion viene de otra pagina.
+
+  El servidor debe contestar incluyendo:
+
+  ```
+  Access-Control-Allow-Origin: http://127.0.0.1:8080
+  ```
+
+  ## Por que importa
+
+  Sin esa cabecera, el navegador **descarta la respuesta** aunque el servidor
+  haya contestado 200, y el `fetch` del frontend lanza un error de red.
+  La rubrica penaliza esto con -30%.
+
+  En `servidor.py` se habilita con una sola linea:
+
+  ```python
+  from flask_cors import CORS
+  CORS(app)
+  ```
+
+  <-- Revisar la pestana **Headers** de la respuesta en Bruno para ver la cabecera.
+}

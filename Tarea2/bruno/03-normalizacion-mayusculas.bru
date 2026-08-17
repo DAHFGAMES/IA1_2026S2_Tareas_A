@@ -1,0 +1,44 @@
+meta {
+  name: 03 - Normalizacion de mayusculas
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/inventario?item=ESCUDO
+  body: none
+  auth: none
+}
+
+params:query {
+  item: ESCUDO
+}
+
+assert {
+  res.status: eq 200
+  res.body.encontrado: eq true
+  res.body.itemBuscado: eq escudo
+}
+
+docs {
+  # Entrada en MAYUSCULAS
+
+  <-- Se manda `ESCUDO` y aun asi el resultado es `encontrado: true`.
+
+  ## Por que hace falta normalizar
+
+  En Prolog, una palabra que empieza con mayuscula **no es un dato, es una VARIABLE**.
+  Si se inyectara `ESCUDO` tal cual, Prolog lo tomaria como un hueco por rellenar
+  en lugar de como el nombre de un item, y `member/2` daria verdadero contra
+  cualquier cosa.
+
+  Por eso `servidor.py` aplica `.strip().lower()` antes de armar la consulta:
+
+  ```python
+  def limpiar_item(texto):
+      return texto.strip().lower()
+  ```
+
+  <-- El campo `itemBuscado` de la respuesta devuelve `escudo` en minusculas,
+  <-- que es la prueba de que la normalizacion si ocurrio.
+}

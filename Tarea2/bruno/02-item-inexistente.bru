@@ -1,0 +1,48 @@
+meta {
+  name: 02 - Item inexistente
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/inventario?item=dragon
+  body: none
+  auth: none
+}
+
+params:query {
+  item: dragon
+}
+
+assert {
+  res.status: eq 200
+  res.body.ok: eq true
+  res.body.encontrado: eq false
+  res.body.totalItems: eq 7
+}
+
+docs {
+  # El item no existe, pero la regla NO falla
+
+  <-- Se busca `dragon`, que no esta en ninguna de las dos bolsas.
+
+  Lo importante aqui es que la respuesta sigue siendo **200 OK** con `ok: true`
+  y solo cambia `encontrado` a `false`.
+
+  ## Por que importa
+
+  En Prolog, `member(dragon, [espada, pocion, ...])` **falla**. Y en Prolog una falla
+  tumba toda la regla que la contiene: si se dejara suelto, `analizar_inventario/6`
+  no devolveria nada y el backend responderia HTTP 500.
+
+  Por eso en `inventario.pl` el metodo va envuelto en un if-then-else:
+
+  ```prolog
+  (   member(ItemBuscado, InventarioGeneral)
+  ->  Encontrado = si
+  ;   Encontrado = no
+  ),
+  ```
+
+  <-- Asi la regla siempre tiene exito y las otras 4 variables se unifican igual.
+}

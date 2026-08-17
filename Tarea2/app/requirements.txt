@@ -1,0 +1,10 @@
+# *-*-*-*-*-*-*-*-*
+# Dependencias de Python del backend.
+# Se instalan con:  pip install -r requirements.txt
+# Aparte de estas, la maquina necesita SWI-Prolog instalado (el binario swipl),
+# porque PySwip no trae el motor: solo se conecta al que ya esta en el sistema.
+# *-*-*-*-*-*-*-*-*
+
+pyswip==0.3.3      # <-- puente entre Python y SWI-Prolog.
+Flask==3.1.3       # <-- framework del servidor web / API REST.
+Flask-Cors==6.0.5  # <-- middleware que habilita CORS para el navegador.

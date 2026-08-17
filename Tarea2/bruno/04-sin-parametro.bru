@@ -1,0 +1,39 @@
+meta {
+  name: 04 - Sin parametro (error 400)
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/api/inventario
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 400
+  res.body.ok: eq false
+}
+
+docs {
+  # Validacion de entrada
+
+  <-- Se llama al endpoint SIN el parametro `item`.
+
+  El backend responde **400 Bad Request** con un mensaje de error y **no llega a
+  molestar a Prolog**:
+
+  ```json
+  { "ok": false, "error": "Debe enviar el parametro 'item'." }
+  ```
+
+  ## Como se comprueba
+
+  <-- En la CONSOLA DEL BACKEND no aparece ningun `[CONSULTA PROLOG]` para esta
+  <-- peticion, ni el recorrido recursivo. Se corta antes:
+
+  ```python
+  if not item_crudo.strip():
+      return jsonify({"ok": False, "error": "..."}), 400
+  ```
+}

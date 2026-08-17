@@ -1,0 +1,123 @@
+/*
+*-*-*-*-*-*-*-*-*
+ARCHIVO: estilos.css
+FASE 3 - FRONTEND (PRESENTACION)
+
+Solo apariencia. No contiene ningun dato ni logica: si se borra este archivo
+la pagina sigue funcionando igual, nada mas se ve fea.
+*-*-*-*-*-*-*-*-*
+*/
+
+/* <-- Estilo general de toda la pagina. */
+body {
+    font-family: system-ui, sans-serif;   /* <-- tipografia del sistema, sin descargar nada. */
+    background: #1e1e2e;                  /* <-- fondo oscuro. */
+    color: #e6e6e6;                       /* <-- texto claro para que contraste. */
+    margin: 0;
+    padding: 2rem 1rem;
+    max-width: 1000px;                    /* <-- ancho maximo para que el texto no quede eterno. */
+    margin-inline: auto;                  /* <-- centra el contenido horizontalmente. */
+}
+
+h1 {
+    margin-bottom: 0.2rem;
+    color: #f0c674;                       /* <-- dorado, tema RPG. */
+}
+
+.subtitulo {
+    margin-top: 0;
+    color: #9a9ab0;
+    font-size: 0.9rem;
+}
+
+/* <-- Caja reutilizable: cada bloque de contenido usa esta clase. */
+.tarjeta {
+    background: #2a2a3c;
+    border: 1px solid #3d3d55;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* <-- Formulario: etiqueta arriba, campo y boton abajo. */
+label {
+    display: block;                       /* <-- block hace que ocupe su propia linea. */
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+input {
+    padding: 0.6rem;
+    width: 60%;
+    border-radius: 6px;
+    border: 1px solid #3d3d55;
+    background: #1e1e2e;
+    color: #e6e6e6;
+}
+
+button {
+    padding: 0.6rem 1.2rem;
+    margin-left: 0.5rem;
+    border: none;
+    border-radius: 6px;
+    background: #f0c674;
+    color: #1e1e2e;
+    font-weight: bold;
+    cursor: pointer;                      /* <-- el cursor cambia a manita al pasar encima. */
+}
+
+button:hover {
+    background: #ffd98a;                  /* <-- se aclara al pasar el mouse. */
+}
+
+/* <-- Zona de avisos y errores. */
+.mensaje {
+    min-height: 1.2rem;                   /* <-- reserva el espacio para que la pagina no brinque. */
+    color: #f08a8a;
+}
+
+/* <-- Clase que oculta un elemento. JavaScript la pone y la quita. */
+.oculto {
+    display: none;
+}
+
+/* <-- Colores del resultado de member/2. */
+.si {
+    color: #8ae08a;                       /* <-- verde: el item si existe. */
+    font-weight: bold;
+}
+
+.no {
+    color: #f08a8a;                       /* <-- rojo: el item no existe. */
+    font-weight: bold;
+}
+
+/* <-- Las tres listas se acomodan en columnas que se apilan solas en pantallas chicas. */
+.columnas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+}
+
+h2 {
+    font-size: 1rem;
+    margin: 0 0 0.2rem 0;
+    color: #f0c674;
+}
+
+.nota {
+    margin: 0 0 0.6rem 0;
+    font-size: 0.75rem;
+    color: #9a9ab0;
+    font-family: monospace;               /* <-- monoespaciada porque es el nombre de un predicado. */
+}
+
+/* <-- Estilo de los <li> que crea JavaScript. */
+ul {
+    margin: 0;
+    padding-left: 1.2rem;
+}
+
+li {
+    padding: 0.15rem 0;
+}

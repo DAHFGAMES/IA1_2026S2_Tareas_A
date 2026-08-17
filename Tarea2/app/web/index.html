@@ -1,0 +1,93 @@
+<!--
+*-*-*-*-*-*-*-*-*
+ARCHIVO: index.html
+FASE 3 - FRONTEND (ESTRUCTURA)
+
+Esta pagina es solo el ESQUELETO: define los huecos vacios donde despues
+JavaScript va a escribir la respuesta que llegue del backend.
+
+Ningun dato esta escrito a mano aqui: todo lo que se ve al consultar
+sale del JSON que devuelve Prolog a traves de la API.
+*-*-*-*-*-*-*-*-*
+-->
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">                                          <!-- <-- permite acentos y simbolos especiales. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  <!-- <-- hace que se vea bien en celular. -->
+    <title>Inventario RPG - Prolog</title>
+    <link rel="stylesheet" href="estilos.css">                      <!-- <-- carga los estilos visuales. -->
+</head>
+
+<body>
+
+    <h1>Inventario del Aventurero</h1>
+    <p class="subtitulo">Motor de inferencia en Prolog + API REST en Python</p>
+
+    <!--
+    *-*-*-*-*-*-*-*-*
+    FORMULARIO DE ENTRADA
+    El usuario escribe el item a buscar. Se usa un <form> para que la tecla Enter
+    tambien dispare la busqueda, no solo el clic en el boton.
+    *-*-*-*-*-*-*-*-*
+    -->
+    <form id="formulario" class="tarjeta">
+        <label for="entradaItem">Item a buscar dentro del inventario:</label>
+
+        <!-- <-- id="entradaItem": es el nombre con el que JavaScript va a leer lo que se escribio. -->
+        <input type="text" id="entradaItem" placeholder="ejemplo: pocion" autocomplete="off" required>
+
+        <!-- <-- type="submit": al presionarlo se dispara el evento 'submit' del formulario. -->
+        <button type="submit">Consultar a Prolog</button>
+    </form>
+
+    <!-- <-- Zona de avisos: aqui se escribe "Consultando...", errores de red, etc. -->
+    <p id="mensaje" class="mensaje"></p>
+
+    <!--
+    *-*-*-*-*-*-*-*-*
+    ZONA DE RESULTADOS
+    Empieza oculta (class="oculto") y JavaScript la muestra cuando llega la respuesta.
+    Cada <span> y cada <ul> vacio es un HUECO que se rellena dinamicamente.
+    *-*-*-*-*-*-*-*-*
+    -->
+    <section id="resultados" class="oculto">
+
+        <div class="tarjeta resumen">
+            <!-- <-- Hueco 1: el total que calculo length/2 en Prolog. -->
+            <p>Total de items en el inventario general: <span id="totalItems">-</span></p>
+
+            <!-- <-- Hueco 2: el si/no que calculo member/2 en Prolog. -->
+            <p>Resultado de la busqueda: <span id="encontrado">-</span></p>
+        </div>
+
+        <div class="columnas">
+
+            <div class="tarjeta">
+                <h2>Inventario Invertido</h2>
+                <p class="nota">Producido por reverse/2</p>
+                <ul id="listaInvertida"></ul>          <!-- <-- Hueco 3: lista vacia que JS va a llenar. -->
+            </div>
+
+            <div class="tarjeta">
+                <h2>Con Duplicados</h2>
+                <p class="nota">Producido por msort/2</p>
+                <ul id="listaOrdenada"></ul>           <!-- <-- Hueco 4. -->
+            </div>
+
+            <div class="tarjeta">
+                <h2>Sin Duplicados</h2>
+                <p class="nota">Producido por sort/2</p>
+                <ul id="listaUnica"></ul>              <!-- <-- Hueco 5. -->
+            </div>
+
+        </div>
+    </section>
+
+    <!-- <-- El script va al final para que el HTML ya exista cuando JavaScript busque los elementos por id. -->
+    <script src="script.js"></script>
+
+</body>
+
+</html>

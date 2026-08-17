@@ -1,0 +1,44 @@
+meta {
+  name: 01 - Item existente
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/inventario?item=pocion
+  body: none
+  auth: none
+}
+
+params:query {
+  item: pocion
+}
+
+assert {
+  res.status: eq 200
+  res.body.ok: eq true
+  res.body.encontrado: eq true
+  res.body.totalItems: eq 7
+}
+
+docs {
+  # Caso feliz
+
+  <-- Se busca `pocion`, un item que SI existe y que ademas esta DUPLICADO.
+
+  Que se debe ver en la respuesta:
+
+  | Campo | Valor esperado | Predicado que lo produjo |
+  | :--- | :--- | :--- |
+  | `totalItems` | 7 | `length/2` |
+  | `encontrado` | true | `member/2` |
+  | `inventarioInvertido` | empieza con `mapa` | `reverse/2` |
+  | `inventarioOrdenado` | 7 elementos, `pocion` dos veces | `msort/2` |
+  | `inventarioUnico` | 6 elementos, `pocion` una vez | `sort/2` |
+
+  <-- La diferencia entre `inventarioOrdenado` (7) e `inventarioUnico` (6) es
+  <-- exactamente lo que demuestra la diferencia entre msort/2 y sort/2.
+
+  <-- Al mismo tiempo, en la CONSOLA DEL BACKEND se imprime el recorrido recursivo
+  <-- de los 7 items, lanzado por mostrar_inventario/1 desde Prolog.
+}
